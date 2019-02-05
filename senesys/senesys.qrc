@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>senesys.jpg</file>
+    </qresource>
+</RCC>
