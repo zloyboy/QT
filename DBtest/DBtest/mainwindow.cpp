@@ -7,23 +7,29 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
+    //scanner(new Scanner),
+    //showTimer(0)
 {
     ui->setupUi(this);
 
+    /*connect(scanner, &Scanner::fingerPresent, this, &MainWindow::fingerPresent);
+    scanner->moveToThread(&scannerThread);
+    scannerThread.start();*/
+
     db = QSqlDatabase::addDatabase("QTDS");
 
-    /*db.setHostName("senesys-db.elvees.com");
+    db.setHostName("senesys-db.elvees.com");
     db.setDatabaseName("SenesysSQL");
     db.setUserName("board");
-    db.setPassword("senesys");*/
-
-    db.setHostName("slicer-pc.elvees.com");
-    db.setDatabaseName("SenesysSQL2");
-    db.setUserName("sa");
     db.setPassword("senesys");
 
-    if(db.open()) ui->statusBar->showMessage("Connect OK");
-    else
+    /*db.setHostName("slicer-pc.elvees.com");
+    db.setDatabaseName("SenesysSQL2");
+    db.setUserName("sa");
+    db.setPassword("senesys");*/
+
+    //if(db.open()) ui->statusBar->showMessage("Connect OK");
+    if(!db.open())
     {
         ui->statusBar->showMessage(db.lastError().text());
         return ;
@@ -65,25 +71,29 @@ MainWindow::MainWindow(QWidget *parent) :
        ui->listTerms->addItem(new QListWidgetItem(QIcon(":/img/Gray.bmp"), queryTerms.record().value(1).toString()));
     }
 
-    //ui->listTerms->addItem(new QListWidgetItem(QIcon(":/img/Gray.bmp"), "term1"));
-    //ui->listTerms->addItem(new QListWidgetItem(QIcon(":/img/Green.bmp"), "term2"));
+    FTRHANDLE handle = ftrScanOpenDevice();
+    FTRSCAN_IMAGE_SIZE imageSize;
+    if (handle) ftrScanGetImageSize(handle, &imageSize);
+    else ui->statusBar->showMessage("Can't open Futronic");
 }
 
 MainWindow::~MainWindow()
 {
+    /*scannerThread.quit();
+    scannerThread.wait();
+    delete scanner;*/
+
     delete ui;
 }
 
-/*void MainWindow::on_btnQuery_clicked()
+void MainWindow::fingerPresent(QPixmap pixmap)
 {
-    QSqlQuery query = QSqlQuery(db);
-    if(!query.exec("select * from Versions"))
+    ui->fingerLabel->setPixmap(pixmap);
+
+    if (showTimer != 0)
     {
-        ui->statusBar->showMessage(db.lastError().text());
-        return;
+        killTimer(showTimer);
     }
-    while(query.next())
-    {
-       qDebug() << query.record();
-    }
-}*/
+
+    showTimer = startTimer(2000);
+}

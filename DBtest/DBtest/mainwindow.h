@@ -4,7 +4,12 @@
 #include <QMainWindow>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
-//#include <QtSql/QSqlTableModel>
+#include <QObject>
+#include <QPixmap>
+#include <QString>
+#include <QThread>
+
+#include "scanner.h"
 
 namespace Ui {
 class MainWindow;
@@ -18,12 +23,18 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void fingerPresent(QPixmap pixmap);
+
 private slots:
 
 private:
     Ui::MainWindow *ui;
     QSqlDatabase db;
-    //QSqlTableModel *model;
+
+    Scanner *scanner;
+    QThread scannerThread;
+    int showTimer;
 };
 
 #endif // MAINWINDOW_H
