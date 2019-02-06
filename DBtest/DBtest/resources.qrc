@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>Green.bmp</file>
+        <file>Gray.bmp</file>
+    </qresource>
+</RCC>
