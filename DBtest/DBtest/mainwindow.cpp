@@ -11,9 +11,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     db = QSqlDatabase::addDatabase("QTDS");
-    db.setHostName("senesys-db.elvees.com");
+
+    /*db.setHostName("senesys-db.elvees.com");
     db.setDatabaseName("SenesysSQL");
     db.setUserName("board");
+    db.setPassword("senesys");*/
+
+    db.setHostName("slicer-pc.elvees.com");
+    db.setDatabaseName("SenesysSQL2");
+    db.setUserName("sa");
     db.setPassword("senesys");
 
     if(db.open()) ui->statusBar->showMessage("Connect OK");
@@ -44,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
             WHERE((TermMasterSlave.TermMasterSlave_Id=Terminals.Terminals_Id Or TermMasterSlave.TermMasterSlave_Id Is Null)\
             AND (TermMasterSlave.flagMaster=1 Or TermMasterSlave.flagMaster Is Null)\
             AND (Boards.flagActive=1) AND (Computers.Computers_Id=4)\
-            AND (Terminals.ConfigOfTerm=12 OR Terminals.ConfigOfTerm=15)) ORDER BY Terminals.NetDevice_Id";
+            AND (Terminals.ConfigOfTerm=12 OR Terminals.ConfigOfTerm=15 OR Terminals.ConfigOfTerm=23)) ORDER BY Terminals.NetDevice_Id";
     QSqlQuery queryTerms = QSqlQuery(db);
     if(!queryTerms.exec(strQueryTerms))
     {
