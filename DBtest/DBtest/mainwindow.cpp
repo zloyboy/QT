@@ -6,15 +6,15 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
-    //scanner(new Scanner),
-    //showTimer(0)
+    ui(new Ui::MainWindow),
+    scanner(new Scanner),
+    showTimer(0)
 {
     ui->setupUi(this);
 
-    /*connect(scanner, &Scanner::fingerPresent, this, &MainWindow::fingerPresent);
+    connect(scanner, &Scanner::fingerPresent, this, &MainWindow::fingerPresent);
     scanner->moveToThread(&scannerThread);
-    scannerThread.start();*/
+    scannerThread.start();
 
     db = QSqlDatabase::addDatabase("QTDS");
 
@@ -71,17 +71,22 @@ MainWindow::MainWindow(QWidget *parent) :
        ui->listTerms->addItem(new QListWidgetItem(QIcon(":/img/Gray.bmp"), queryTerms.record().value(1).toString()));
     }
 
-    FTRHANDLE handle = ftrScanOpenDevice();
+    /*FTRHANDLE handle = ftrScanOpenDevice();
     FTRSCAN_IMAGE_SIZE imageSize;
-    if (handle) ftrScanGetImageSize(handle, &imageSize);
-    else ui->statusBar->showMessage("Can't open Futronic");
+    if (handle)
+    {
+        ftrScanGetImageSize(handle, &imageSize);
+        ftrScanCloseDevice( handle );
+        ui->statusBar->showMessage("Futronic OK");
+    }
+    else ui->statusBar->showMessage("Can't open Futronic");*/
 }
 
 MainWindow::~MainWindow()
 {
-    /*scannerThread.quit();
+    scannerThread.quit();
     scannerThread.wait();
-    delete scanner;*/
+    delete scanner;
 
     delete ui;
 }
